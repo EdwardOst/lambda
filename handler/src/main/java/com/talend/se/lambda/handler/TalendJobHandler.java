@@ -1,14 +1,23 @@
 package com.talend.se.lambda.handler;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.PrintStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
@@ -35,13 +44,32 @@ public class TalendJobHandler implements RequestStreamHandler {
 		// default values
 		// from dynamodb or s3 directory
 		//
+
+		System.out.println("System.java.class.path = " + System.getProperty("java.class.path"));
+		printClasspaths(System.out, this.getClass().getClassLoader());
+		
+//		URL resourceUrl = this.getClass().getResource("/se_demo/talendlambdajobexample_0_1/contexts/Default.properties");
+//		String sResourceUrl = resourceUrl == null ? "null" : resourceUrl.toString();
+//		System.out.println("getResource(/se_demo/talendlambdajobexample_0_1/contexts/Default.properties)=" + sResourceUrl);
+		
 		Map<String, String> env = System.getenv();
 		String talendJobClassName = env.get("TalendJobClassName");
 		if (talendJobClassName == null || "".equals(talendJobClassName)) {
 			throw new Error("TalendJobClassName environment variable is missing or empty.");
 		}
+		
+		String talendContextFiles = env.get("TalendContextFiles");
+		List<String> talendContextList = null;
+		if (talendContextFiles != null) {
+			talendContextList = Arrays.asList(talendContextFiles.split("(:|;)"));
+		}
+		
+		invokeTalendJob(talendJobClassName, talendContextList, input, output);
+
+	}
+
+	private void invokeTalendJob(String talendJobClassName, List<String> contextFiles, InputStream input, OutputStream output) throws Error {
 		Object talendJob;
-		Field parentContextMapField;
 		Map<String, Object> parentContextMap;
 		Method runJobMethod;
 		String errorMessage = "Error in error handling code: errorMessage not initialized.";
@@ -50,13 +78,15 @@ public class TalendJobHandler implements RequestStreamHandler {
 			errorMessage = "Could not find default constructor for class '" + talendJobClassName + "'.";
 			Constructor<?> ctor = jobClass.getConstructor();
 			talendJob = ctor.newInstance();
-			parentContextMapField = jobClass.getField("parentContextMap");
-			parentContextMap = (Map<String, Object>) (parentContextMapField.get(talendJob));
+
+			parentContextMap = readContextFiles(contextFiles, talendJob);
 			parentContextMap.put("inputStream", input);
 			parentContextMap.put("outputStream", output);
 
 			errorMessage = "Could not find runJob method for class '" + talendJobClassName + "'.";
 			runJobMethod = talendJob.getClass().getMethod("runJob", String[].class);
+
+			System.out.println("invoking method runJob on class " + talendJob.getClass().getName());
 			runJobMethod.invoke(talendJob, new Object[] { new String[] {} });
 		} catch (ClassNotFoundException e) {
 			throw new Error("Class for TalendJob `" + talendJobClassName + "' not found.", e);
@@ -64,12 +94,88 @@ public class TalendJobHandler implements RequestStreamHandler {
 			throw new Error(errorMessage, e);
 		} catch (InstantiationException e) {
 			throw new Error("Error instantiating `" + talendJobClassName + "'.", e);
-		} catch (NoSuchFieldException e) {
-			throw new Error("Could not find parentContextMap field in class " + talendJobClassName + ".", e);
 		} catch (IllegalAccessException e) {
 			throw new Error("Access error instantiating " + talendJobClassName + ".", e);
 		} catch (InvocationTargetException e) {
 			throw new Error("Error invoking default constructor for " + talendJobClassName + ".", e);
 		}
+	}
+
+	private Map<String, Object> readContextFiles(List<String> contextFiles, Object talendJob)
+			throws Error {
+
+		Map<String, Object> parentContextMap;
+		Class<?> talendJobClass = talendJob.getClass();
+		Field parentContextMapField;
+		try {
+			parentContextMapField = talendJobClass.getField("parentContextMap");
+			parentContextMap = (Map<String, Object>) (parentContextMapField.get(talendJob));
+		} catch (NoSuchFieldException e) {
+			throw new Error("Could not find parentContextMap field in class " + talendJobClass.getName() + ".", e);
+		} catch (IllegalAccessException e) {
+			throw new Error("Access error instantiating " + talendJobClass.getName() + ".", e);
+		}
+		
+		if (contextFiles != null) {
+			for (String contextFile : contextFiles) {
+				URL contextUrl = talendJobClass.getResource(contextFile);
+				if (contextUrl != null) {
+					System.out.println("getResource(" + contextFile + ")=" + contextUrl.toString());
+					try {
+						loadParentContext(parentContextMap, contextUrl.openStream());
+					} catch (IOException e) {
+						throw new Error("Error opening Talend context resource '" + contextUrl.toString() + "'");
+					}
+				}
+			}
+		}
+		
+		return parentContextMap;
+	}
+
+	
+	private void loadParentContext(Map<String, Object> parentContextMap, InputStream contextStream) {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(contextStream));
+		Stream<String> lines = reader.lines();
+		lines.forEach( new Consumer<String>() {
+			public void accept(String line) {
+				System.out.println("line: " + line);
+				if (line.startsWith("#")) {
+					return;
+				}
+				String[] items = line.split("=",2);
+				if (items.length == 1) {
+					parentContextMap.put(items[0], "");
+					System.out.println("setting '" + items[0] + "' to empty string");
+				} else if (items.length == 2) {
+					parentContextMap.put(items[0], items[1]);
+					System.out.println("setting '" + items[0] + "' to '" + items[1] + "'");
+				} else {
+					System.out.println("items.length = " + items.length + " : " + items.toString());
+				}
+			}
+		});
+	}
+	
+	private void printClasspaths(PrintStream stream, ClassLoader classLoader) {
+
+		while (classLoader != null) {
+			stream.println("\nclassloader " + classLoader.getClass().getName());
+			printClasspath(stream, classLoader);
+			classLoader = classLoader.getParent();
+		}
+		stream.println();
+		
+	}
+	
+	private void printClasspath(PrintStream stream, ClassLoader classLoader) {
+
+        URL[] urls = ((URLClassLoader)classLoader).getURLs();
+
+        StringBuilder classpath = new StringBuilder();
+        for(URL url: urls){
+        	classpath.append(url.getFile() + ":");
+        }
+        stream.println(classpath.toString());
 	}
 }

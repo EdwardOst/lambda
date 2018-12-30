@@ -2,12 +2,14 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<parent>
+	<!--  parent>
 		<groupId>com.talend.se</groupId>
 		<artifactId>lambda</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-	</parent>
+	</parent -->
+	<groupId>com.talend.se</groupId>
 	<artifactId>handler</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
 	<name>Generic Lambda Handler</name>
 	<description>Generic RequestStreamHandler with Reflection for Talend Jobs</description>
 
@@ -63,19 +65,6 @@
 					<forceJavacCompilerUse>true</forceJavacCompilerUse>
 				</configuration>
 			</plugin>
-			<!--  plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.0.0</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin -->
 		</plugins>
 	</build>
 

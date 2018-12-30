@@ -23,7 +23,6 @@ public class TalendJobHandlerTest {
 
         handler.handleRequest(input, output, null);
 
-        // TODO: validate output here if needed.
         String sampleOutputString = output.toString();
         System.out.println("sampleOutputString='" + sampleOutputString + "'");
         Assert.assertEquals(EXPECTED_OUTPUT_STRING, sampleOutputString);

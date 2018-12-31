@@ -48,10 +48,6 @@ public class TalendJobHandler implements RequestStreamHandler {
 		System.out.println("System.java.class.path = " + System.getProperty("java.class.path"));
 		printClasspaths(System.out, this.getClass().getClassLoader());
 		
-//		URL resourceUrl = this.getClass().getResource("/se_demo/talendlambdajobexample_0_1/contexts/Default.properties");
-//		String sResourceUrl = resourceUrl == null ? "null" : resourceUrl.toString();
-//		System.out.println("getResource(/se_demo/talendlambdajobexample_0_1/contexts/Default.properties)=" + sResourceUrl);
-		
 		Map<String, String> env = System.getenv();
 		String talendJobClassName = env.get("TalendJobClassName");
 		if (talendJobClassName == null || "".equals(talendJobClassName)) {
@@ -104,23 +100,14 @@ public class TalendJobHandler implements RequestStreamHandler {
 	private Map<String, Object> readContextFiles(List<String> contextFiles, Object talendJob)
 			throws Error {
 
-		Map<String, Object> parentContextMap;
 		Class<?> talendJobClass = talendJob.getClass();
-		Field parentContextMapField;
-		try {
-			parentContextMapField = talendJobClass.getField("parentContextMap");
-			parentContextMap = (Map<String, Object>) (parentContextMapField.get(talendJob));
-		} catch (NoSuchFieldException e) {
-			throw new Error("Could not find parentContextMap field in class " + talendJobClass.getName() + ".", e);
-		} catch (IllegalAccessException e) {
-			throw new Error("Access error instantiating " + talendJobClass.getName() + ".", e);
-		}
+		Map<String, Object> parentContextMap;
+		parentContextMap = getParentContextMap(talendJob);
 		
 		if (contextFiles != null) {
 			for (String contextFile : contextFiles) {
 				URL contextUrl = talendJobClass.getResource(contextFile);
 				if (contextUrl != null) {
-					System.out.println("getResource(" + contextFile + ")=" + contextUrl.toString());
 					try {
 						loadParentContext(parentContextMap, contextUrl.openStream());
 					} catch (IOException e) {
@@ -133,13 +120,26 @@ public class TalendJobHandler implements RequestStreamHandler {
 		return parentContextMap;
 	}
 
+	private Map<String, Object> getParentContextMap(Object talendJob) throws Error {
+		Map<String, Object> parentContextMap;
+
+		try {
+			Field parentContextMapField = talendJob.getClass().getField("parentContextMap");
+			parentContextMap = (Map<String, Object>) (parentContextMapField.get(talendJob));
+		} catch (NoSuchFieldException e) {
+			throw new Error("Could not find parentContextMap field in class " + talendJob.getClass().getName() + ".", e);
+		} catch (IllegalAccessException e) {
+			throw new Error("Access error instantiating " + talendJob.getClass().getName() + ".", e);
+		}
+		return parentContextMap;
+	}
+
 	
 	private void loadParentContext(Map<String, Object> parentContextMap, InputStream contextStream) {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(contextStream));
 		Stream<String> lines = reader.lines();
 		lines.forEach( new Consumer<String>() {
 			public void accept(String line) {
-				System.out.println("line: " + line);
 				if (line.startsWith("#")) {
 					return;
 				}
@@ -156,7 +156,7 @@ public class TalendJobHandler implements RequestStreamHandler {
 			}
 		});
 	}
-	
+
 	private void printClasspaths(PrintStream stream, ClassLoader classLoader) {
 
 		while (classLoader != null) {

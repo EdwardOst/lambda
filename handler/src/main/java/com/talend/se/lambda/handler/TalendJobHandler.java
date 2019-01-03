@@ -14,8 +14,11 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -137,24 +140,40 @@ public class TalendJobHandler implements RequestStreamHandler {
 	
 	private void loadParentContext(Map<String, Object> parentContextMap, InputStream contextStream) {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(contextStream));
-		Stream<String> lines = reader.lines();
-		lines.forEach( new Consumer<String>() {
-			public void accept(String line) {
-				if (line.startsWith("#")) {
-					return;
-				}
-				String[] items = line.split("=",2);
-				if (items.length == 1) {
-					parentContextMap.put(items[0], "");
-					System.out.println("setting '" + items[0] + "' to empty string");
-				} else if (items.length == 2) {
-					parentContextMap.put(items[0], items[1]);
-					System.out.println("setting '" + items[0] + "' to '" + items[1] + "'");
-				} else {
-					System.out.println("items.length = " + items.length + " : " + items.toString());
-				}
+		Properties defaultProps = new Properties();
+		// must use the java.util.Properties.load() here to escape the string correctly.
+		// for some reason the value is also escaped when persisted (although this does not seem to be part of the spec
+		// so an entry with key name mykey and value myparam=some_value
+		//     mykey=myparam=some_value
+		// unnecessarily escapes the second = sign
+		//     mykey=myparam\=some_value
+		try {
+			defaultProps.load(contextStream);
+			Set<String> keys = defaultProps.stringPropertyNames();
+			for (String key : keys) {
+				parentContextMap.put(key, defaultProps.getProperty(key));
 			}
-		});
+		} catch (IOException e) {
+			throw new Error("Error reading context stream into parentContextMap", e);
+		}
+//		Stream<String> lines = reader.lines();
+//		lines.forEach( new Consumer<String>() {
+//			public void accept(String line) {
+//				if (line.startsWith("#")) {
+//					return;
+//				}
+//				String[] items = line.split("=",2);
+//				if (items.length == 1) {
+//					parentContextMap.put(items[0], "");
+//					System.out.println("setting '" + items[0] + "' to empty string");
+//				} else if (items.length == 2) {
+//					parentContextMap.put(items[0], items[1]);
+//					System.out.println("setting '" + items[0] + "' to '" + items[1] + "'");
+//				} else {
+//					System.out.println("items.length = " + items.length + " : " + items.toString());
+//				}
+//			}
+//		});
 	}
 
 	private void printClasspaths(PrintStream stream, ClassLoader classLoader) {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="1" failures="0" name="com.talend.se.lambda.handler.TalendJobHandlerTest" time="0.008" errors="1" skipped="0">
+<testsuite tests="1" failures="0" name="com.talend.se.lambda.handler.TalendJobHandlerTest" time="0.011" errors="1" skipped="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="C:\java\jdk1.8.0_192\jre\bin"/>
@@ -27,7 +27,7 @@
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="user.variant" value=""/>
     <property name="os.name" value="Windows 10"/>
-    <property name="classworlds.conf" value="C:\Users\eost\eclipse-workspace\.metadata\.plugins\org.eclipse.m2e.launching\launches\m2conf7270869267892691757.tmp"/>
+    <property name="classworlds.conf" value="C:\Users\eost\eclipse-workspace\.metadata\.plugins\org.eclipse.m2e.launching\launches\m2conf5267524095158696865.tmp"/>
     <property name="sun.jnu.encoding" value="Cp1252"/>
     <property name="java.library.path" value="C:\java\jdk1.8.0_192\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:/java/jre1.8.0_192/bin/server;C:/java/jre1.8.0_192/bin;C:/java/jre1.8.0_192/lib/amd64;C:\Python\Python37\Scripts\;C:\Python\Python37\;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\gradle\gradle-5.0\bin;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\iCLS\;C:\Program Files\Intel\Intel(R) Management Engine Components\iCLS\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\putty\;C:\git\cmd;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Users\eost\AppData\Local\Microsoft\WindowsApps;;C:\Fiddler;%USERPROFILE%\AppData\Local\Microsoft\WindowsApps;C:\eclipse;;."/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
@@ -61,9 +61,9 @@
     <property name="sun.desktop" value="windows"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase classname="com.talend.se.lambda.handler.TalendJobHandlerTest" name="testLambdaJobHandler" time="0.008">
+  <testcase classname="com.talend.se.lambda.handler.TalendJobHandlerTest" name="testLambdaJobHandler" time="0.011">
     <error message="TalendJobClassName environment variable is missing or empty." type="java.lang.Error">java.lang.Error: TalendJobClassName environment variable is missing or empty.
-	at com.talend.se.lambda.handler.TalendJobHandler.handleRequest(TalendJobHandler.java:41)
+	at com.talend.se.lambda.handler.TalendJobHandler.handleRequest(TalendJobHandler.java:57)
 	at com.talend.se.lambda.handler.TalendJobHandlerTest.testLambdaJobHandler(TalendJobHandlerTest.java:24)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -95,5 +95,14 @@
 	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:115)
 	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:75)
 </error>
+    <system-out>System.java.class.path = C:\Users\eost\git\lambda\job\target\test-classes;C:\Users\eost\git\lambda\job\target\classes;C:\Users\eost\.m2\repository\com\talend\se\handler\0.0.1-SNAPSHOT\handler-0.0.1-SNAPSHOT.jar;C:\Users\eost\.m2\repository\com\amazonaws\aws-lambda-java-core\1.1.0\aws-lambda-java-core-1.1.0.jar;C:\Users\eost\.m2\repository\com\amazonaws\aws-lambda-java-events\1.3.0\aws-lambda-java-events-1.3.0.jar;C:\Users\eost\.m2\repository\com\amazonaws\aws-java-sdk-s3\1.11.475\aws-java-sdk-s3-1.11.475.jar;C:\Users\eost\.m2\repository\com\amazonaws\aws-java-sdk-kms\1.11.475\aws-java-sdk-kms-1.11.475.jar;C:\Users\eost\.m2\repository\com\amazonaws\aws-java-sdk-core\1.11.475\aws-java-sdk-core-1.11.475.jar;C:\Users\eost\.m2\repository\commons-logging\commons-logging\1.1.3\commons-logging-1.1.3.jar;C:\Users\eost\.m2\repository\org\apache\httpcomponents\httpclient\4.5.5\httpclient-4.5.5.jar;C:\Users\eost\.m2\repository\org\apache\httpcomponents\httpcore\4.4.9\httpcore-4.4.9.jar;C:\Users\eost\.m2\repository\commons-codec\commons-codec\1.10\commons-codec-1.10.jar;C:\Users\eost\.m2\repository\software\amazon\ion\ion-java\1.0.2\ion-java-1.0.2.jar;C:\Users\eost\.m2\repository\com\fasterxml\jackson\core\jackson-databind\2.6.7.2\jackson-databind-2.6.7.2.jar;C:\Users\eost\.m2\repository\com\fasterxml\jackson\core\jackson-annotations\2.6.0\jackson-annotations-2.6.0.jar;C:\Users\eost\.m2\repository\com\fasterxml\jackson\core\jackson-core\2.6.7\jackson-core-2.6.7.jar;C:\Users\eost\.m2\repository\com\fasterxml\jackson\dataformat\jackson-dataformat-cbor\2.6.7\jackson-dataformat-cbor-2.6.7.jar;C:\Users\eost\.m2\repository\joda-time\joda-time\2.8.1\joda-time-2.8.1.jar;C:\Users\eost\.m2\repository\com\amazonaws\jmespath-java\1.11.475\jmespath-java-1.11.475.jar;C:\Users\eost\.m2\repository\com\amazonaws\aws-java-sdk-sns\1.11.475\aws-java-sdk-sns-1.11.475.jar;C:\Users\eost\.m2\repository\com\amazonaws\aws-java-sdk-sqs\1.11.475\aws-java-sdk-sqs-1.11.475.jar;C:\Users\eost\.m2\repository\com\amazonaws\aws-java-sdk-cognitoidentity\1.11.475\aws-java-sdk-cognitoidentity-1.11.475.jar;C:\Users\eost\.m2\repository\com\amazonaws\aws-java-sdk-kinesis\1.11.475\aws-java-sdk-kinesis-1.11.475.jar;C:\Users\eost\.m2\repository\com\amazonaws\aws-java-sdk-dynamodb\1.11.475\aws-java-sdk-dynamodb-1.11.475.jar;C:\Users\eost\.m2\repository\junit\junit\4.12\junit-4.12.jar;C:\Users\eost\.m2\repository\org\hamcrest\hamcrest-core\1.3\hamcrest-core-1.3.jar;
+
+classloader sun.misc.Launcher$AppClassLoader
+/C:/Users/eost/git/lambda/job/target/surefire/surefirebooter6861198982733602862.jar:
+
+classloader sun.misc.Launcher$ExtClassLoader
+/C:/java/jdk1.8.0_192/jre/lib/ext/access-bridge-64.jar:/C:/java/jdk1.8.0_192/jre/lib/ext/cldrdata.jar:/C:/java/jdk1.8.0_192/jre/lib/ext/dnsns.jar:/C:/java/jdk1.8.0_192/jre/lib/ext/jaccess.jar:/C:/java/jdk1.8.0_192/jre/lib/ext/jfxrt.jar:/C:/java/jdk1.8.0_192/jre/lib/ext/localedata.jar:/C:/java/jdk1.8.0_192/jre/lib/ext/nashorn.jar:/C:/java/jdk1.8.0_192/jre/lib/ext/sunec.jar:/C:/java/jdk1.8.0_192/jre/lib/ext/sunjce_provider.jar:/C:/java/jdk1.8.0_192/jre/lib/ext/sunmscapi.jar:/C:/java/jdk1.8.0_192/jre/lib/ext/sunpkcs11.jar:/C:/java/jdk1.8.0_192/jre/lib/ext/zipfs.jar:
+
+</system-out>
   </testcase>
 </testsuite>

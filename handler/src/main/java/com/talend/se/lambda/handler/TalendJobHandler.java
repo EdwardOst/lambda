@@ -14,40 +14,18 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Arrays;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.function.Consumer;
-import java.util.stream.Stream;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 
 public class TalendJobHandler implements RequestStreamHandler {
-
+	
 	public void handleRequest(InputStream input, OutputStream output, Context context) throws IOException {
-
-		// Consider reading other default values for context variables.
-		// These would be static configurations stored with code as property files.
-		// For example, read an environment variable named TalendContext with the name
-		// of the
-		// context and find a file with that name in the standard Talend context path
-		// location.
-		// Read the context file into the parent context parameters so that there is
-		// behavior similar to
-		// running Talend from the command line.
-		// Keep in mind that this entails the usual security risks wrt sensitive info in
-		// the embedded context.
-		//
-		// An alternative would be storing them in s3 or dynamodb which would be more
-		// secure
-		// consider using the function name and version or function arn to lookup
-		// default values
-		// from dynamodb or s3 directory
-		//
-
+		
 		System.out.println("System.java.class.path = " + System.getProperty("java.class.path"));
 		printClasspaths(System.out, this.getClass().getClassLoader());
 		
@@ -67,6 +45,18 @@ public class TalendJobHandler implements RequestStreamHandler {
 
 	}
 
+	/**
+	 * invokeTalendJob
+	 * 
+	 * Use reflection to get an instance of the job and then invoke runJob method.
+	 * Bind the input and output streams received from the RequestStreamHandler interface to context variables.
+	 * 
+	 * @param talendJobClassName - fully qualified class name of the job to run
+	 * @param contextFiles - a delimited list of context file path names to read
+	 * @param input - assigned to the job inputStream context variable
+	 * @param output - assigned to the job outputStream context variable
+	 * @throws Error
+	 */
 	private void invokeTalendJob(String talendJobClassName, List<String> contextFiles, InputStream input, OutputStream output) throws Error {
 		Object talendJob;
 		Map<String, Object> parentContextMap;
@@ -142,8 +132,8 @@ public class TalendJobHandler implements RequestStreamHandler {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(contextStream));
 		Properties defaultProps = new Properties();
 		// must use the java.util.Properties.load() here to escape the string correctly.
-		// for some reason the value is also escaped when persisted (although this does not seem to be part of the spec
-		// so an entry with key name mykey and value myparam=some_value
+		// for some reason the value is also escaped when persisted (although this does not seem to be part of the spec)
+		// so an entry with key name mykey and value with a string containing an equals sign such as 'myparam=some_value'
 		//     mykey=myparam=some_value
 		// unnecessarily escapes the second = sign
 		//     mykey=myparam\=some_value
@@ -156,24 +146,6 @@ public class TalendJobHandler implements RequestStreamHandler {
 		} catch (IOException e) {
 			throw new Error("Error reading context stream into parentContextMap", e);
 		}
-//		Stream<String> lines = reader.lines();
-//		lines.forEach( new Consumer<String>() {
-//			public void accept(String line) {
-//				if (line.startsWith("#")) {
-//					return;
-//				}
-//				String[] items = line.split("=",2);
-//				if (items.length == 1) {
-//					parentContextMap.put(items[0], "");
-//					System.out.println("setting '" + items[0] + "' to empty string");
-//				} else if (items.length == 2) {
-//					parentContextMap.put(items[0], items[1]);
-//					System.out.println("setting '" + items[0] + "' to '" + items[1] + "'");
-//				} else {
-//					System.out.println("items.length = " + items.length + " : " + items.toString());
-//				}
-//			}
-//		});
 	}
 
 	private void printClasspaths(PrintStream stream, ClassLoader classLoader) {

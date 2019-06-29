@@ -13,5 +13,7 @@
 	<modules>
 		<module>handler</module>
 		<module>job</module>
+		<module>spring-boot</module>
+		<module>spring-cloud-function</module>
 	</modules>
 </project>

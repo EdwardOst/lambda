@@ -32,13 +32,5 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/lambda_example_0.1/lib/antlr-runtime-3.5.2.jar"/>
-	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/lambda_example_0.1/lib/dom4j-1.6.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/lambda_example_0.1/lib/log4j-1.2.17.jar"/>
-	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/lambda_example_0.1/lib/org.talend.dataquality.parser.jar"/>
-	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/lambda_example_0.1/lib/routines.jar"/>
-	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/lambda_example_0.1/lib/talend_file_enhanced_20070724.jar"/>
-	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/lambda_example_0.1/lib/talendcsv.jar"/>
-	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/lambda_example_0.1/lambda_example/lambda_example_0_1.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

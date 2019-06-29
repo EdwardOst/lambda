@@ -1,4 +1,4 @@
-package com.talend.se.lambda.handler;
+package job;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -7,16 +7,14 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Map;
 
-import org.junit.Assert;
-import org.junit.Test;
+import com.talend.se.lambda.handler.TalendJobHandler;
 
-public class TalendJobHandlerTest {
+public class RunJob {
 
-    private static final String SAMPLE_INPUT_STRING = "{\"foo\": \"bar\"}";
+    private static final String SAMPLE_INPUT_STRING = "hello earth";
     private static final String EXPECTED_OUTPUT_STRING = SAMPLE_INPUT_STRING + "\n";
 
-    @Test
-    public void testLambdaJobHandler() throws IOException {
+	public static void main(String[] args) {
         TalendJobHandler handler = new TalendJobHandler();
 
         InputStream input = new ByteArrayInputStream(SAMPLE_INPUT_STRING.getBytes());
@@ -26,11 +24,14 @@ public class TalendJobHandlerTest {
 		String talendJobClassName = env.get("TalendJobClassName");
         System.out.println("env[TalendJobClassName]=" + talendJobClassName);
         
-        handler.handleRequest(input, output, null);
+        try {
+			handler.handleRequest(input, output, null);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
         String sampleOutputString = output.toString();
-        System.out.println("sampleOutputString='" + sampleOutputString + "'");
-        Assert.assertEquals(EXPECTED_OUTPUT_STRING, sampleOutputString);
-    }
-    
+        System.out.println(sampleOutputString);
+	}
+
 }

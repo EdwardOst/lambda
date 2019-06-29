@@ -1,11 +1,11 @@
 -------------------------------------------------------------------------------
 Test set: com.talend.se.lambda.handler.TalendJobHandlerTest
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.068 sec <<< FAILURE!
-testLambdaJobHandler(com.talend.se.lambda.handler.TalendJobHandlerTest)  Time elapsed: 0.011 sec  <<< ERROR!
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.056 sec <<< FAILURE!
+testLambdaJobHandler(com.talend.se.lambda.handler.TalendJobHandlerTest)  Time elapsed: 0.009 sec  <<< ERROR!
 java.lang.Error: TalendJobClassName environment variable is missing or empty.
-	at com.talend.se.lambda.handler.TalendJobHandler.handleRequest(TalendJobHandler.java:57)
-	at com.talend.se.lambda.handler.TalendJobHandlerTest.testLambdaJobHandler(TalendJobHandlerTest.java:24)
+	at com.talend.se.lambda.handler.TalendJobHandler.handleRequest(TalendJobHandler.java:35)
+	at com.talend.se.lambda.handler.TalendJobHandlerTest.testLambdaJobHandler(TalendJobHandlerTest.java:29)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)

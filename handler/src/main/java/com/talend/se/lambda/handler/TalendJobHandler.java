@@ -18,30 +18,43 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import org.apache.log4j.MDC;
+import java.lang.management.ManagementFactory;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 
 public class TalendJobHandler implements RequestStreamHandler {
-	
+
+	public TalendJobHandler() {
+		MDC.put("AWS_REGION", System.getenv("AWS_REGION"));
+		MDC.put("AWS_LAMBDA_FUNCTION_NAME", System.getenv("AWS_LAMBDA_FUNCTION_NAME"));
+		MDC.put("AWS_LAMBDA_FUNCTION_VERSION", System.getenv("AWS_LAMBDA_FUNCTION_VERSION"));
+		MDC.put("systemPid", ManagementFactory.getRuntimeMXBean().getName().split("@")[0]);
+	}
+
 	public void handleRequest(InputStream input, OutputStream output, Context context) throws IOException {
-		
+
 		System.out.println("System.java.class.path = " + System.getProperty("java.class.path"));
 		printClasspaths(System.out, this.getClass().getClassLoader());
-		
+
+		// set log4j system property
+		// see http://logging.apache.org/log4j/1.2/manual.html#defaultInit
+		System.setProperty("log4j.configuration", "file:///opt/java/log4j.xml");
+
 		Map<String, String> env = System.getenv();
 		String talendJobClassName = env.get("TalendJobClassName");
 		if (talendJobClassName == null || "".equals(talendJobClassName)) {
 			throw new Error("TalendJobClassName environment variable is missing or empty.");
 		}
-		
+
 		String talendContextFiles = env.get("TalendContextFiles");
 		List<String> talendContextList = null;
 		if (talendContextFiles != null) {
 			talendContextList = Arrays.asList(talendContextFiles.split("(:|;)"));
 		}
-		
-		invokeTalendJob(talendJobClassName, talendContextList, input, output);
+
+		invokeTalendJob(talendJobClassName, talendContextList, input, output, context);
 
 	}
 
@@ -49,15 +62,24 @@ public class TalendJobHandler implements RequestStreamHandler {
 	 * invokeTalendJob
 	 * 
 	 * Use reflection to get an instance of the job and then invoke runJob method.
-	 * Bind the input and output streams received from the RequestStreamHandler interface to context variables.
+	 * Bind the input and output streams received from the RequestStreamHandler
+	 * interface to context variables.
 	 * 
-	 * @param talendJobClassName - fully qualified class name of the job to run
-	 * @param contextFiles - a delimited list of context file path names to read
-	 * @param input - assigned to the job inputStream context variable
-	 * @param output - assigned to the job outputStream context variable
+	 * @param talendJobClassName
+	 *            - fully qualified class name of the job to run
+	 * @param contextFiles
+	 *            - a delimited list of context file path names to read
+	 * @param input
+	 *            - assigned to the job inputStream context variable
+	 * @param output
+	 *            - assigned to the job outputStream context variable
+	 * @param context
+	 *            - AWS Lambda context is assigned to the job awsContext context
+	 *            variable
 	 * @throws Error
 	 */
-	private void invokeTalendJob(String talendJobClassName, List<String> contextFiles, InputStream input, OutputStream output) throws Error {
+	private void invokeTalendJob(String talendJobClassName, List<String> contextFiles, InputStream input,
+			OutputStream output, Context context) throws Error {
 		Object talendJob;
 		Map<String, Object> parentContextMap;
 		Method runJobMethod;
@@ -71,6 +93,7 @@ public class TalendJobHandler implements RequestStreamHandler {
 			parentContextMap = readContextFiles(contextFiles, talendJob);
 			parentContextMap.put("inputStream", input);
 			parentContextMap.put("outputStream", output);
+			parentContextMap.put("awsContext", context);
 
 			errorMessage = "Could not find runJob method for class '" + talendJobClassName + "'.";
 			runJobMethod = talendJob.getClass().getMethod("runJob", String[].class);
@@ -90,13 +113,12 @@ public class TalendJobHandler implements RequestStreamHandler {
 		}
 	}
 
-	private Map<String, Object> readContextFiles(List<String> contextFiles, Object talendJob)
-			throws Error {
+	private Map<String, Object> readContextFiles(List<String> contextFiles, Object talendJob) throws Error {
 
 		Class<?> talendJobClass = talendJob.getClass();
 		Map<String, Object> parentContextMap;
 		parentContextMap = getParentContextMap(talendJob);
-		
+
 		if (contextFiles != null) {
 			for (String contextFile : contextFiles) {
 				URL contextUrl = talendJobClass.getResource(contextFile);
@@ -109,7 +131,7 @@ public class TalendJobHandler implements RequestStreamHandler {
 				}
 			}
 		}
-		
+
 		return parentContextMap;
 	}
 
@@ -120,23 +142,25 @@ public class TalendJobHandler implements RequestStreamHandler {
 			Field parentContextMapField = talendJob.getClass().getField("parentContextMap");
 			parentContextMap = (Map<String, Object>) (parentContextMapField.get(talendJob));
 		} catch (NoSuchFieldException e) {
-			throw new Error("Could not find parentContextMap field in class " + talendJob.getClass().getName() + ".", e);
+			throw new Error("Could not find parentContextMap field in class " + talendJob.getClass().getName() + ".",
+					e);
 		} catch (IllegalAccessException e) {
 			throw new Error("Access error instantiating " + talendJob.getClass().getName() + ".", e);
 		}
 		return parentContextMap;
 	}
 
-	
 	private void loadParentContext(Map<String, Object> parentContextMap, InputStream contextStream) {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(contextStream));
 		Properties defaultProps = new Properties();
 		// must use the java.util.Properties.load() here to escape the string correctly.
-		// for some reason the value is also escaped when persisted (although this does not seem to be part of the spec)
-		// so an entry with key name mykey and value with a string containing an equals sign such as 'myparam=some_value'
-		//     mykey=myparam=some_value
+		// for some reason the value is also escaped when persisted (although this does
+		// not seem to be part of the spec)
+		// so an entry with key name mykey and value with a string containing an equals
+		// sign such as 'myparam=some_value'
+		// mykey=myparam=some_value
 		// unnecessarily escapes the second = sign
-		//     mykey=myparam\=some_value
+		// mykey=myparam\=some_value
 		try {
 			defaultProps.load(contextStream);
 			Set<String> keys = defaultProps.stringPropertyNames();
@@ -156,17 +180,17 @@ public class TalendJobHandler implements RequestStreamHandler {
 			classLoader = classLoader.getParent();
 		}
 		stream.println();
-		
+
 	}
-	
+
 	private void printClasspath(PrintStream stream, ClassLoader classLoader) {
 
-        URL[] urls = ((URLClassLoader)classLoader).getURLs();
+		URL[] urls = ((URLClassLoader) classLoader).getURLs();
 
-        StringBuilder classpath = new StringBuilder();
-        for(URL url: urls){
-        	classpath.append(url.getFile() + ":");
-        }
-        stream.println(classpath.toString());
+		StringBuilder classpath = new StringBuilder();
+		for (URL url : urls) {
+			classpath.append(url.getFile() + ":");
+		}
+		stream.println(classpath.toString());
 	}
 }

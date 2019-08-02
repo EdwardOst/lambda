@@ -11,9 +11,9 @@
 			<PatternLayout pattern="%d{ISO8601} : [%-5p] - %c : %m%n" />
 		</Console>
 
-		<!--  Console name="JOB" target="SYSTEM_OUT">
+		<Console name="JOB" target="SYSTEM_OUT">
 			<PatternLayout pattern="%d{ISO8601} : [%-5p] - %c : %x : %m%n" />
-		</Console -->
+		</Console>
 	</Appenders>
 	<Loggers>
 		<Logger name="se_demo" level="info" additivity="false">

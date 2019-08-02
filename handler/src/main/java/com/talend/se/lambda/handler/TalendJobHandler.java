@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.PrintStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -16,31 +15,49 @@ import java.net.URLClassLoader;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
-import org.apache.log4j.MDC;
-import java.lang.management.ManagementFactory;
+import java.util.function.Consumer;
+
+import org.apache.logging.log4j.CloseableThreadContext;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.amazonaws.services.lambda.runtime.LambdaLogger;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 
 public class TalendJobHandler implements RequestStreamHandler {
 
+	private static final String LOG4J2_XML_PATH = "file:///opt/java/log4j.xml";
+
 	public TalendJobHandler() {
-		MDC.put("AWS_REGION", System.getenv("AWS_REGION"));
-		MDC.put("AWS_LAMBDA_FUNCTION_NAME", System.getenv("AWS_LAMBDA_FUNCTION_NAME"));
-		MDC.put("AWS_LAMBDA_FUNCTION_VERSION", System.getenv("AWS_LAMBDA_FUNCTION_VERSION"));
-		MDC.put("systemPid", ManagementFactory.getRuntimeMXBean().getName().split("@")[0]);
 	}
 
 	public void handleRequest(InputStream input, OutputStream output, Context context) throws IOException {
 
-		System.out.println("System.java.class.path = " + System.getProperty("java.class.path"));
-		printClasspaths(System.out, this.getClass().getClassLoader());
+		LambdaLogger logger;
+		if (context != null) {
+			logger = context.getLogger();
+		} else {
+			logger = new LambdaLogger() {
+				Logger logger = LogManager.getLogger(TalendJobHandler.class);
+
+				@Override
+				public void log(String message) {
+					logger.info(message);
+				}
+			};
+		}
+		
+		logger.log("System.java.class.path = " + System.getProperty("java.class.path"));
+		printClasspaths(logger::log, this.getClass().getClassLoader());
 
 		// set log4j system property
 		// see http://logging.apache.org/log4j/1.2/manual.html#defaultInit
-		System.setProperty("log4j.configuration", "file:///opt/java/log4j.xml");
+		System.setProperty("log4j.configuration", LOG4J2_XML_PATH);
 
 		Map<String, String> env = System.getenv();
 		String talendJobClassName = env.get("TalendJobClassName");
@@ -54,8 +71,13 @@ public class TalendJobHandler implements RequestStreamHandler {
 			talendContextList = Arrays.asList(talendContextFiles.split("(:|;)"));
 		}
 
-		invokeTalendJob(talendJobClassName, talendContextList, input, output, context);
-
+		try (final CloseableThreadContext.Instance ctc = CloseableThreadContext.push(
+						Optional.ofNullable(System.getenv("AWS_REGION")).orElse("null") + ", "
+						+ Optional.ofNullable(System.getenv("AWS_LAMBDA_FUNCTION_NAME")).orElse("null") + ", "
+						+ Optional.ofNullable(System.getenv("AWS_LAMBDA_FUNCTION_VERSION")).orElse("null") + " : ")
+				) {
+			invokeTalendJob(talendJobClassName, talendContextList, logger::log, input, output, context);
+		};
 	}
 
 	/**
@@ -78,7 +100,7 @@ public class TalendJobHandler implements RequestStreamHandler {
 	 *            variable
 	 * @throws Error
 	 */
-	private void invokeTalendJob(String talendJobClassName, List<String> contextFiles, InputStream input,
+	private void invokeTalendJob(String talendJobClassName, List<String> contextFiles, Consumer<String> logger, InputStream input,
 			OutputStream output, Context context) throws Error {
 		Object talendJob;
 		Map<String, Object> parentContextMap;
@@ -98,14 +120,14 @@ public class TalendJobHandler implements RequestStreamHandler {
 			errorMessage = "Could not find runJob method for class '" + talendJobClassName + "'.";
 			runJobMethod = talendJob.getClass().getMethod("runJob", String[].class);
 
-			System.out.println("invoking method runJob on class " + talendJob.getClass().getName());
+			logger.accept("invoking method runJob on class " + talendJob.getClass().getName());
 			runJobMethod.invoke(talendJob, new Object[] { new String[] {} });
 		} catch (ClassNotFoundException e) {
-			throw new Error("Class for TalendJob `" + talendJobClassName + "' not found.", e);
+			throw new Error("Class for TalendJob '" + talendJobClassName + "' not found.", e);
 		} catch (NoSuchMethodException e) {
 			throw new Error(errorMessage, e);
 		} catch (InstantiationException e) {
-			throw new Error("Error instantiating `" + talendJobClassName + "'.", e);
+			throw new Error("Error instantiating '" + talendJobClassName + "'.", e);
 		} catch (IllegalAccessException e) {
 			throw new Error("Access error instantiating " + talendJobClassName + ".", e);
 		} catch (InvocationTargetException e) {
@@ -172,18 +194,17 @@ public class TalendJobHandler implements RequestStreamHandler {
 		}
 	}
 
-	private void printClasspaths(PrintStream stream, ClassLoader classLoader) {
+	private void printClasspaths(Consumer<String> logger, ClassLoader classLoader) {
 
 		while (classLoader != null) {
-			stream.println("\nclassloader " + classLoader.getClass().getName());
-			printClasspath(stream, classLoader);
+			logger.accept("\nclassloader " + classLoader.getClass().getName());
+			printClasspath(logger, classLoader);
 			classLoader = classLoader.getParent();
 		}
-		stream.println();
 
 	}
 
-	private void printClasspath(PrintStream stream, ClassLoader classLoader) {
+	private void printClasspath(Consumer<String> logger, ClassLoader classLoader) {
 
 		URL[] urls = ((URLClassLoader) classLoader).getURLs();
 
@@ -191,6 +212,6 @@ public class TalendJobHandler implements RequestStreamHandler {
 		for (URL url : urls) {
 			classpath.append(url.getFile() + ":");
 		}
-		stream.println(classpath.toString());
+		logger.accept(classpath.toString());
 	}
 }

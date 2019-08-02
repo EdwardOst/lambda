@@ -32,13 +32,28 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/lambda_example_0.1/lib/antlr-runtime-3.5.2.jar"/>
-	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/lambda_example_0.1/lib/dom4j-1.6.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/lambda_example_0.1/lib/log4j-1.2.17.jar"/>
-	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/lambda_example_0.1/lib/org.talend.dataquality.parser.jar"/>
-	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/lambda_example_0.1/lib/routines.jar"/>
-	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/lambda_example_0.1/lib/talend_file_enhanced_20070724.jar"/>
-	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/lambda_example_0.1/lib/talendcsv.jar"/>
-	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/lambda_example_0.1/lambda_example/lambda_example_0_1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/Job2Lambda_GettingStarted_03_CorrelatedLogging_0.1/lib/accessors-smart-1.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/Job2Lambda_GettingStarted_03_CorrelatedLogging_0.1/lib/antlr-runtime-3.5.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/Job2Lambda_GettingStarted_03_CorrelatedLogging_0.1/lib/commons-beanutils-1.8.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/Job2Lambda_GettingStarted_03_CorrelatedLogging_0.1/lib/commons-collections-3.2.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/Job2Lambda_GettingStarted_03_CorrelatedLogging_0.1/lib/commons-lang-2.6.jar"/>
+	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/Job2Lambda_GettingStarted_03_CorrelatedLogging_0.1/lib/commons-logging-1.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/Job2Lambda_GettingStarted_03_CorrelatedLogging_0.1/lib/dom4j-1.6.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/Job2Lambda_GettingStarted_03_CorrelatedLogging_0.1/lib/ezmorph-1.0.6.jar"/>
+	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/Job2Lambda_GettingStarted_03_CorrelatedLogging_0.1/lib/jackson-core.jar"/>
+	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/Job2Lambda_GettingStarted_03_CorrelatedLogging_0.1/lib/jackson-databind.jar"/>
+	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/Job2Lambda_GettingStarted_03_CorrelatedLogging_0.1/lib/jaxen-1.1.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/Job2Lambda_GettingStarted_03_CorrelatedLogging_0.1/lib/json-lib-2.4.1-talend.jar"/>
+	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/Job2Lambda_GettingStarted_03_CorrelatedLogging_0.1/lib/json-path-2.1.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/Job2Lambda_GettingStarted_03_CorrelatedLogging_0.1/lib/json-smart-2.2.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/Job2Lambda_GettingStarted_03_CorrelatedLogging_0.1/lib/org.talend.dataquality.parser.jar"/>
+	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/Job2Lambda_GettingStarted_03_CorrelatedLogging_0.1/lib/routines.jar"/>
+	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/Job2Lambda_GettingStarted_03_CorrelatedLogging_0.1/lib/slf4j-api-1.7.5.jar"/>
+	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/Job2Lambda_GettingStarted_03_CorrelatedLogging_0.1/lib/spring-beans-5.0.5.RELEASE.jar"/>
+	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/Job2Lambda_GettingStarted_03_CorrelatedLogging_0.1/lib/spring-core-5.0.5.RELEASE.jar"/>
+	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/Job2Lambda_GettingStarted_03_CorrelatedLogging_0.1/lib/talend_file_enhanced_20070724.jar"/>
+	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/Job2Lambda_GettingStarted_03_CorrelatedLogging_0.1/lib/talendcsv.jar"/>
+	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/Job2Lambda_GettingStarted_03_CorrelatedLogging_0.1/lib/xom-1.2.7.jar"/>
+	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/Job2Lambda_GettingStarted_03_CorrelatedLogging_0.1/Job2Lambda_GettingStarted_03_CorrelatedLogging/job2lambda_gettingstarted_03_correlatedlogging_0_1.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

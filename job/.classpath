@@ -37,6 +37,7 @@
 	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/Job2Lambda_GettingStarted_03_CorrelatedLogging_0.1/lib/commons-beanutils-1.8.3.jar"/>
 	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/Job2Lambda_GettingStarted_03_CorrelatedLogging_0.1/lib/commons-collections-3.2.2.jar"/>
 	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/Job2Lambda_GettingStarted_03_CorrelatedLogging_0.1/lib/commons-lang-2.6.jar"/>
+	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/Job2Lambda_GettingStarted_03_CorrelatedLogging_0.1/lib/commons-logging-1.1.1.jar"/>
 	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/Job2Lambda_GettingStarted_03_CorrelatedLogging_0.1/lib/commons-logging-1.2.jar"/>
 	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/Job2Lambda_GettingStarted_03_CorrelatedLogging_0.1/lib/dom4j-1.6.1.jar"/>
 	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/Job2Lambda_GettingStarted_03_CorrelatedLogging_0.1/lib/ezmorph-1.0.6.jar"/>
@@ -55,6 +56,5 @@
 	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/Job2Lambda_GettingStarted_03_CorrelatedLogging_0.1/lib/talendcsv.jar"/>
 	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/Job2Lambda_GettingStarted_03_CorrelatedLogging_0.1/lib/xom-1.2.7.jar"/>
 	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/Job2Lambda_GettingStarted_03_CorrelatedLogging_0.1/Job2Lambda_GettingStarted_03_CorrelatedLogging/job2lambda_gettingstarted_03_correlatedlogging_0_1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/Job2Lambda_GettingStarted_03_CorrelatedLogging_0.1/lib/commons-logging-1.1.1.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

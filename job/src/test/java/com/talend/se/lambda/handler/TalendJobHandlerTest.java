@@ -30,10 +30,6 @@ public class TalendJobHandlerTest {
         InputStream input = new ByteArrayInputStream(SAMPLE_INPUT_STRING.getBytes());
         OutputStream output = new ByteArrayOutputStream();
 
-        Map<String, String> env = System.getenv();
-		String talendJobClassName = env.get("TalendJobClassName");
-        System.out.println("env[TalendJobClassName]=" + talendJobClassName);
-
         LambdaLogger logger = new LambdaLogger() {
 			Logger logger = LogManager.getLogger(TalendJobHandler.class);
 

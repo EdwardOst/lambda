@@ -51,7 +51,7 @@ public class TalendJobHandler implements RequestStreamHandler {
 	
 	private static void initLog(String message) {
 		if (debugTalendJobHandler) {
-			System.out.println(message);
+			System.out.println("initLog: " + message);
 		}
 	}
 	

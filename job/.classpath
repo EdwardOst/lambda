@@ -56,5 +56,6 @@
 	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/Job2Lambda_GettingStarted_03_CorrelatedLogging_0.1/lib/talendcsv.jar"/>
 	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/Job2Lambda_GettingStarted_03_CorrelatedLogging_0.1/lib/xom-1.2.7.jar"/>
 	<classpathentry kind="lib" path="C:/Users/eost/Documents/VirtualBox/shared/lambda/Job2Lambda_GettingStarted_03_CorrelatedLogging_0.1/Job2Lambda_GettingStarted_03_CorrelatedLogging/job2lambda_gettingstarted_03_correlatedlogging_0_1.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/talend_job_handler"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

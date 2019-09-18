@@ -11,7 +11,7 @@
 
 
 	<modules>
-		<module>handler</module>
+		<module>talend_job_handler</module>
 		<module>job</module>
 		<module>spring-boot</module>
 		<module>spring-cloud-function</module>

@@ -1,0 +1,3 @@
+[submodule "talend_job_handler"]
+	path = talend_job_handler
+	url = https://github.com/EdwardOst/talend_job_handler.git
